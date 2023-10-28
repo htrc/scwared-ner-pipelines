@@ -1,4 +1,4 @@
-name: /N/slate/ninoparu/projects/spacy-cuda117
+name: spacy-cuda117
 channels:
   - bioconda
   - conda-forge
@@ -167,5 +167,5 @@ dependencies:
     - urllib3==2.0.7
     - wasabi==1.1.2
     - weasel==0.3.3
-prefix: /N/slate/ninoparu/projects/spacy-cuda117
+prefix: spacy-cuda117
 
