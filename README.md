@@ -1,0 +1,1 @@
+# scwared-spanish-custom-ner
