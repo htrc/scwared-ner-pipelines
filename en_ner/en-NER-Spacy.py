@@ -11,23 +11,24 @@ import zipfile
 import os
 import spacy
 import pandas as pd
+import torch
 
 
 # In[4]:
 
-
-# only when gpu is available
-spacy.require_gpu()
+if torch.cuda.is_available():
+    # only when gpu is available
+    print("CUDA is available, running Spacy with GPU")
+    spacy.require_gpu()
 
 
 # In[5]:
 
 
 # %%timeit -n 1 -r 1
-nlp = spacy.load("en_core_web_trf")
+nlp = spacy.load("model/en_core_web_trf-3.6.1")
 # for spanish language dataset, use es_core_news_lg
 #nlp = spacy.load("es_core_news_lg")
-
 
 
 # In[67]:
@@ -55,6 +56,7 @@ def read_page(myfile, name, vol_id):
     # remove txt from page_id
     page = page.split(".")[0]
     # fixed page by only looking at the number
+    page = page[-8:]
 
     sentence_ner = []
     sentence_id = 0
@@ -74,17 +76,10 @@ def read_page(myfile, name, vol_id):
     return temp_sents, sentence_ner
 
 
-# In[68]:
+# create result_output folder if it doesnt exist
+# no impact if its exists
+get_ipython().system('mkdir result_output')
 
-
-# read zip data
-#!ls scwared_data
-
-
-# In[73]:
-
-
-# In[75]:
 
 # start_time = time.time()
 for f_name in tqdm.tqdm(os.listdir("scwared_data")):
@@ -118,13 +113,4 @@ for f_name in tqdm.tqdm(os.listdir("scwared_data")):
 # print(f"progress {end_time-start_time}")
 
 
-# In[79]:
 
-
-# result_pd = pd.DataFrame(result).sort_values(1).reset_index(drop=True)
-
-
-# In[81]:
-
-
-# result_pd[5].unique()
