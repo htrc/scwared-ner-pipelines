@@ -6,6 +6,15 @@ The initial conda environment requirements can be found on conda-env-cuda117.yml
 The additional pip requirements can be found on pip-env-cuda117.txt
 We separate the two requirements to avoid dependency conflicts and make sure the environment is consistent on different system
 
+Make sure you have downloaded the model along with this repository using git lfs to support large file download, more info about git lfs https://git-lfs.com/
+
+To install git lfs and pull the large files
+```
+git lfs install
+git lfs pull
+```
+
+
 1. If it doesn't exist yet, create anaconda environment tor run spacy transformers model using
 ```
 conda env create -f conda-env-cuda117.yml
@@ -32,7 +41,12 @@ Make sure the --no-deps is included to force installation without looking at dep
 4. The data should be placed on scwared-spanish-data folder. In this scwared spanish datasets, we also have categorized the input volumes into sub-genre where each datasets will be placed under the folder representing the sub-genre.
 We used compressed zip format in this case as our input data. If one want to perform this pipeline on HTRC analytics data capsule, they can modified extraction scripts or compressed the volume folder into a zip where one zip represents one volume.
 
-5. Run the extraction script using ipython for interactivity with the bash prompt, this will read all the zip files in the scwared_data folder and create a csv file in the scwared-spanish-custom folder for each sub-genre folder represented on the input folder.
+5. Run the extraction script using ipython for interactivity with the bash prompt, this will read all the zip files in the scwared_data folder and create a csv file in the scwared-spanish-custom folder for each sub-genre folder represented on the input folder. This model only have 4 output classes for now: PER (Person), LOC (Location), ORG (Organization), and MISC (Miscelaneous) More info on training this custom model can be found at datasets folder.
+```
+ipython es-NER-Spacy.py
+```
+
+6. Besides the custom model, we also have prepared scripts for extracting entities using the Spacy en-core-web-trf 3.3.0 model that supposedly can help detect other entities that are not captured by the Spanish custom model. The output of this model will be created under scwared-spanish-enmodel
 ```
 ipython es-NER-Spacy.py
 ```

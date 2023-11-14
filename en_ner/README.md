@@ -8,6 +8,12 @@ We separate the two requirements to avoid dependency conflicts and make sure the
 
 Make sure you have downloaded the model along with this repository using git lfs to support large file download, more info about git lfs https://git-lfs.com/
 
+To install git lfs and pull the large files
+```
+git lfs install
+git lfs pull
+```
+
 1. If it doesn't exist yet, create anaconda environment tor run spacy transformers model using
 ```
 conda env create -f conda-env-cuda117.yml
