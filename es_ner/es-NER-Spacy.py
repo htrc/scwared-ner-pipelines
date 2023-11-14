@@ -23,7 +23,7 @@ if torch.cuda.is_available():
 
 #%%timeit -n 1 -r 1
 nlp = spacy.load('model/spacy-custom-es-trf')
-nlp.add_pipe("sentencizer")
+nlp.add_pipe("sentencizer",before="transformer")
 
 
 
@@ -77,6 +77,8 @@ import tqdm
 #start_time = time.time()
 
 for l_dir in os.listdir("scwared-spanish-data"):
+    if not os.path.isdir(f"scwared-spanish-data/{l_dir}"):
+        continue
     get_ipython().system('mkdir scwared-spanish-custom/{l_dir}')
     for f_name in tqdm.tqdm(os.listdir(f"scwared-spanish-data/{l_dir}")):
         # skip if entity already exists
