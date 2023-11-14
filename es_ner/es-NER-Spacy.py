@@ -6,30 +6,35 @@
 
 import spacy
 import pandas as pd
+import os
+import zipfile
+from zipfile import ZipFile
+import time
+import torch
 
 
 # In[2]:
-spacy.require_gpu()
+if torch.cuda.is_available():
+    # only when gpu is available
+    print("CUDA is available, running Spacy with GPU")
+    spacy.require_gpu()
 
-# only when gpu is available
-#spacy.require_gpu()
-
-
-# In[5]:
 
 
 #%%timeit -n 1 -r 1
-nlp = spacy.load('./es_model_com/model-best')
+nlp = spacy.load('model/spacy-custom-es-trf')
 nlp.add_pipe("sentencizer")
 
-# In[6]:
 
 
-def read_page(myfile,name):
+def read_page(myfile,name,vol_id):
     # get volume_id and page_id
-    vol_id,page = name.split("/")
+    _, page = name.split("/")
     # remove txt from page_id
     page = page.split(".")[0]
+    # fixed page by only looking at the number
+    page = page[-8:]
+
     sentence_ner = []
     sentence_id = 0
     temp_page = []
@@ -57,20 +62,9 @@ def read_page(myfile,name):
 # In[8]:
 
 
-import os
-import zipfile
-from zipfile import ZipFile
-import time
 
 
 # In[13]ls -ltr:
-
-
-get_ipython().system('ls scwared-spanish-data')
-
-
-# In[12]:
-
 
 get_ipython().system('mkdir scwared-spanish-custom')
 
@@ -96,7 +90,7 @@ for l_dir in os.listdir("scwared-spanish-data"):
                 for temp_name in myzip.infolist():
                     #print(temp_name.filename)
                     with myzip.open(temp_name.filename) as myfile:
-                        rr  = read_page(myfile,temp_name.filename)
+                        rr  = read_page(myfile,temp_name.filename,vol_id)
                         result.extend(rr[1])
                         sentences.extend(rr[0])
                         #break
@@ -109,9 +103,3 @@ for l_dir in os.listdir("scwared-spanish-data"):
                                      "entity_type","start_char","end_char"]). \
                     sort_values(["page","sentence_id","ent_id"]).reset_index(drop=True)
         result_pd.to_csv(f"scwared-spanish-custom/{l_dir}/{vol_id}.csv",index=False)
-        sentences_pd = pd.DataFrame(sentences, columns=["vol_id","page","sentence_id","sentence"]). \
-            sort_values(["page","sentence_id"]).reset_index(drop=True)
-        sentences_pd.to_csv(f"scwared-spanish-custom/{l_dir}/sent-{vol_id}.csv",index=False)        
-#end_time = time.time()
-#print(f"progress {end_time-start_time}")
-
